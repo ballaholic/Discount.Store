@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discount.Store.Core.CartAggregate;
 using Discount.Store.Infrastructure.ApiEndpoints;
 using Discount.Store.SharedKernel.Interfaces;
+using Discount.Store.Web.Endpoints.ItemEndpoints;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,7 @@ namespace Discount.Store.Web.Endpoints.CartEndpoints
         {
             var response = new CartListResponse();
             response.Carts = await this.repository.All()
-                .Select(cart => new CartRecord(cart.Id))
+                .Select(cart => new CartRecord(cart.Id, cart.CartItems.Select(ci => new ItemRecord(ci.ItemId, ci.Item.Sku, ci.Item.Price))))
                 .ToListAsync();
 
             return Ok(response);
