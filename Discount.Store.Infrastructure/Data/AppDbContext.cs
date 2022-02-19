@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MediatR;
 using System.Threading;
-using Discount.Store.SharedKernel;
+using System.Threading.Tasks;
 using Discount.Store.Core.CartAggregate;
 using Discount.Store.Core.ItemAggregate;
 
