@@ -1,12 +1,10 @@
-﻿using Discount.Store.Core.CartAggregate;
-using Discount.Store.Core.ItemAggregate;
+﻿using Discount.Store.Core.ItemAggregate;
 using Discount.Store.Infrastructure.Data;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Discount.Store.Web
@@ -27,11 +25,6 @@ namespace Discount.Store.Web
         {
             Sku = "Napkins pack",
             Price = 0.45m
-        };
-
-        public static readonly Cart Cart = new Cart
-        {
-            Items = new List<Item>() { Item1, Item2 }
         };
 
         public static void Initialize(IServiceProvider serviceProvider)
@@ -56,7 +49,6 @@ namespace Discount.Store.Web
             }
             dbContext.SaveChanges();
 
-            //dbContext.Carts.Add(Cart);
             dbContext.Items.Add(Item1);
             dbContext.Items.Add(Item2);
             dbContext.Items.Add(Item3);

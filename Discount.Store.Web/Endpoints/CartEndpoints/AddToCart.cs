@@ -44,7 +44,7 @@ namespace Discount.Store.Web.Endpoints.CartEndpoints
             var response = new AddToCartResponse
             {
                 Cart = new CartRecord(updatedCart.Id),
-                Items = updatedCart.Items.Select(item => new ItemRecord(item.Id, item.Sku, item.Price)).ToList()
+                Items = updatedCart.CartItems.Select(cartItem => new ItemRecord(cartItem.ItemId, cartItem.Item.Sku, cartItem.Item.Price)).ToList()
             };
 
             return Ok(response);
