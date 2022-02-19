@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Discount.Store.SharedKernel.Interfaces
 {
-    public interface IRepository<TEntity> : IDisposable where TEntity : BaseEntity, IAggregateRoot
+    public interface IRepository<TEntity> : IDisposable where TEntity : class
     {
-        Task<List<TEntity>> ListAsync(CancellationToken cancellationToken = default);
+        IQueryable<TEntity> All();
 
-        Task<TEntity> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+        IQueryable<TEntity> AllAsNoTracking();
 
         Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
-
-        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
 
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
+
+        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
     }
 }

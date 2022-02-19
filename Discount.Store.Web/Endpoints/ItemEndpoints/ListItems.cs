@@ -8,6 +8,8 @@ using Discount.Store.Infrastructure.ApiEndpoints;
 using Discount.Store.SharedKernel.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Discount.Store.Web.Endpoints.ItemEndpoints
@@ -33,9 +35,9 @@ namespace Discount.Store.Web.Endpoints.ItemEndpoints
         public override async Task<ActionResult<ItemsListResponse>> HandleAsync(CancellationToken cancellationToken)
         {
             var response = new ItemsListResponse();
-            response.Items = (await this.repository.ListAsync(cancellationToken))
+            response.Items = await this.repository.All()
                 .Select(item => new ItemRecord(item.Id, item.Sku, item.Price))
-                .ToList();
+                .ToListAsync();
 
             return Ok(response);
         }

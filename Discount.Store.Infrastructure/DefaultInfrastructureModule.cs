@@ -44,12 +44,8 @@ namespace Discount.Store.Infrastructure
 
         private void RegisterCommonDependencies(ContainerBuilder builder)
         {
-            builder.RegisterGeneric(typeof(EfRepository<>))
+            builder.RegisterGeneric(typeof(Repository<>))
                 .As(typeof(IRepository<>))
-                .InstancePerLifetimeScope();
-
-            builder.RegisterGeneric(typeof(JuntionEntityRepository<>))
-                .As(typeof(IJunctionEntityRepository<>))
                 .InstancePerLifetimeScope();
 
             builder

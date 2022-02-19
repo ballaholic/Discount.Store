@@ -7,6 +7,8 @@ using Discount.Store.Infrastructure.ApiEndpoints;
 using Discount.Store.SharedKernel.Interfaces;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Discount.Store.Web.Endpoints.CartEndpoints
@@ -32,9 +34,9 @@ namespace Discount.Store.Web.Endpoints.CartEndpoints
         public override async Task<ActionResult<CartListResponse>> HandleAsync(CancellationToken cancellationToken)
         {
             var response = new CartListResponse();
-            response.Carts = (await this.repository.ListAsync(cancellationToken))
+            response.Carts = await this.repository.All()
                 .Select(cart => new CartRecord(cart.Id))
-                .ToList();
+                .ToListAsync();
 
             return Ok(response);
         }

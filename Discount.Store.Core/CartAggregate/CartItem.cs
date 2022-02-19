@@ -1,4 +1,4 @@
-﻿using Discount.Store.Core.ItemAggregate;
+﻿using Discount.Store.Core.CartAggregate;
 
 using System.ComponentModel.DataAnnotations;
 

@@ -1,19 +1,17 @@
-﻿using Discount.Store.SharedKernel;
-using Discount.Store.SharedKernel.Interfaces;
+﻿using Discount.Store.SharedKernel.Interfaces;
 
 using Microsoft.EntityFrameworkCore;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Discount.Store.Infrastructure.Data
 {
-    public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity, IAggregateRoot
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        public EfRepository(AppDbContext context)
+        public Repository(AppDbContext context)
         {
             this.Context = context ?? throw new ArgumentNullException(nameof(context));
             this.DbSet = this.Context.Set<TEntity>();
@@ -23,34 +21,13 @@ namespace Discount.Store.Infrastructure.Data
 
         protected AppDbContext Context { get; set; }
 
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        public IQueryable<TEntity> All() => this.DbSet;
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.Context?.Dispose();
-            }
-        }
-
-        public virtual async Task<List<TEntity>> ListAsync(CancellationToken cancellationToken = default)
-        {
-            return await this.DbSet.ToListAsync(cancellationToken);
-        }
-
-        public virtual async Task<TEntity> GetByIdAsync(int id, CancellationToken cancellationToken)
-        {
-            return await this.DbSet.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
-        }
+        public IQueryable<TEntity> AllAsNoTracking() => this.DbSet.AsNoTracking();
 
         public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            this.DbSet.Add(entity);
-
+            await this.DbSet.AddAsync(entity).AsTask();
             await this.SaveChangesAsync(cancellationToken);
 
             return entity;
@@ -58,7 +35,13 @@ namespace Discount.Store.Infrastructure.Data
 
         public virtual async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            this.Context.Entry(entity).State = EntityState.Modified;
+            var entry = this.Context.Entry(entity);
+            if (entry.State == EntityState.Detached)
+            {
+                this.DbSet.Attach(entity);
+            }
+
+            entry.State = EntityState.Modified;
 
             await this.SaveChangesAsync(cancellationToken);
         }
@@ -73,6 +56,20 @@ namespace Discount.Store.Infrastructure.Data
         public virtual async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             await this.Context.SaveChangesAsync(cancellationToken);
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.Context?.Dispose();
+            }
         }
     }
 }
