@@ -48,6 +48,10 @@ namespace Discount.Store.Infrastructure
                 .As(typeof(IRepository<>))
                 .InstancePerLifetimeScope();
 
+            builder.RegisterGeneric(typeof(JuntionEntityRepository<>))
+                .As(typeof(IJunctionEntityRepository<>))
+                .InstancePerLifetimeScope();
+
             builder
                 .RegisterType<Mediator>()
                 .As<IMediator>()
@@ -74,9 +78,6 @@ namespace Discount.Store.Infrastructure
                 .AsClosedTypesOf(mediatrOpenType)
                 .AsImplementedInterfaces();
             }
-
-            //builder.RegisterType<EmailSender>().As<IEmailSender>()
-            //    .InstancePerLifetimeScope();
         }
 
         private void RegisterDevelopmentOnlyDependencies(ContainerBuilder builder)
