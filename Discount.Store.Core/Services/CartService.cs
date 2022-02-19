@@ -1,4 +1,7 @@
-﻿using Discount.Store.Core.CartAggregate;
+﻿using AutoMapper;
+
+using Discount.Store.Core.CartAggregate;
+using Discount.Store.Core.Dtos;
 using Discount.Store.Core.Interfaces;
 using Discount.Store.Core.ItemAggregate;
 using Discount.Store.SharedKernel.Interfaces;
@@ -14,14 +17,18 @@ namespace Discount.Store.Core.Services
         private readonly IRepository<Item> itemRepository;
         private readonly IJunctionEntityRepository<CartItem> cartItemRepository;
 
+        private readonly IMapper mapper;
+
         public CartService(
             IRepository<Cart> cartRepository, 
             IRepository<Item> itemRepository,
-            IJunctionEntityRepository<CartItem> cartItemRepository)
+            IJunctionEntityRepository<CartItem> cartItemRepository,
+            IMapper mapper)
         {
             this.cartRepository = cartRepository;
             this.itemRepository = itemRepository;
             this.cartItemRepository = cartItemRepository;
+            this.mapper = mapper;
         }
 
         public async Task<Cart> AddItemToCart(int cartId, int itemId)
@@ -40,11 +47,13 @@ namespace Discount.Store.Core.Services
                 await Task.FromException<Cart>(new KeyNotFoundException($"Item with Id {itemId} was not found."));
             }
 
-            var entity = new CartItem()
+            var cartItemDto = new CartItemDto()
             {
                 CartId = existingCart.Id,
                 ItemId = existingItem.Id
             };
+
+            var entity = this.mapper.Map<CartItem>(cartItemDto);
 
             await this.cartItemRepository.AddAsync(entity);
             await this.cartItemRepository.SaveChangesAsync();
