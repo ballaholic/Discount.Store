@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Discount.Store.Core.CartAggregate;
-using Discount.Store.Core.ItemAggregate;
 
 namespace Discount.Store.Infrastructure.Data
 {
