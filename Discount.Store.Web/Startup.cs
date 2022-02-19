@@ -26,7 +26,7 @@ namespace Discount.Store.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectionString = Configuration.GetConnectionString("SqliteConnection");
+            string connectionString = Configuration.GetConnectionString("DiscountStoreContext");
             services.AddDbContext(connectionString);
 
             services.AddControllers();

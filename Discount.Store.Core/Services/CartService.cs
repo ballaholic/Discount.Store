@@ -12,11 +12,16 @@ namespace Discount.Store.Core.Services
     {
         private readonly IRepository<Cart> cartRepository;
         private readonly IRepository<Item> itemRepository;
+        private readonly IJunctionEntityRepository<CartItem> cartItemRepository;
 
-        public CartService(IRepository<Cart> cartRepository, IRepository<Item> itemRepository)
+        public CartService(
+            IRepository<Cart> cartRepository, 
+            IRepository<Item> itemRepository,
+            IJunctionEntityRepository<CartItem> cartItemRepository)
         {
             this.cartRepository = cartRepository;
             this.itemRepository = itemRepository;
+            this.cartItemRepository = cartItemRepository;
         }
 
         public async Task<Cart> AddItemToCart(int cartId, int itemId)
@@ -28,7 +33,6 @@ namespace Discount.Store.Core.Services
                 await Task.FromException<Cart>(new KeyNotFoundException($"Cart with Id {cartId} was not found."));
             }
             
-
             var existingItem = await this.itemRepository.GetByIdAsync(itemId);
 
             if (existingItem is null)
@@ -36,9 +40,14 @@ namespace Discount.Store.Core.Services
                 await Task.FromException<Cart>(new KeyNotFoundException($"Item with Id {itemId} was not found."));
             }
 
-            existingCart.Items.Add(existingItem);
-            await this.cartRepository.UpdateAsync(existingCart);
-            await this.cartRepository.SaveChangesAsync();
+            var entity = new CartItem()
+            {
+                CartId = existingCart.Id,
+                ItemId = existingItem.Id
+            };
+
+            await this.cartItemRepository.AddAsync(entity);
+            await this.cartItemRepository.SaveChangesAsync();
 
             return existingCart;
         }
