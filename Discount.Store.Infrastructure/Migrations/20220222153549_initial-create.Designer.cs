@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Discount.Store.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220219180757_Initial-Create")]
-    partial class InitialCreate
+    [Migration("20220222153549_initial-create")]
+    partial class initialcreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -47,7 +47,7 @@ namespace Discount.Store.Infrastructure.Migrations
                     b.ToTable("CartItems");
                 });
 
-            modelBuilder.Entity("Discount.Store.Core.ItemAggregate.Item", b =>
+            modelBuilder.Entity("Discount.Store.Core.CartAggregate.Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +73,7 @@ namespace Discount.Store.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Discount.Store.Core.ItemAggregate.Item", "Item")
+                    b.HasOne("Discount.Store.Core.CartAggregate.Item", "Item")
                         .WithMany("CartItems")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -89,7 +89,7 @@ namespace Discount.Store.Infrastructure.Migrations
                     b.Navigation("CartItems");
                 });
 
-            modelBuilder.Entity("Discount.Store.Core.ItemAggregate.Item", b =>
+            modelBuilder.Entity("Discount.Store.Core.CartAggregate.Item", b =>
                 {
                     b.Navigation("CartItems");
                 });
