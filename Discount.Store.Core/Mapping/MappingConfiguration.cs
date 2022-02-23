@@ -23,6 +23,8 @@ namespace Discount.Store.Core.Mapping
             var config = new MapperConfigurationExpression();
             config.CreateMap<CartItem, CartItemDto>();
             config.CreateMap<CartItemDto, CartItem>();
+
+            MapperInstance = new Mapper(new MapperConfiguration(config));
         }
     }
 }

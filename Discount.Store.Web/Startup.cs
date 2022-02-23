@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 using Discount.Store.Infrastructure;
 using Autofac;
+using AutoMapper;
 using Discount.Store.Core;
 using Discount.Store.Core.Mapping;
 
@@ -35,6 +36,8 @@ namespace Discount.Store.Web
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Discount Store API", Version = "v1" });
             });
+
+            services.AddAutoMapper(typeof(Startup));
 
             MappingConfiguration.RegisterMappings();
         }
